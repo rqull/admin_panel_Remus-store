@@ -37,6 +37,14 @@ class CategoryScreen extends StatelessWidget {
                   ),
                   borderRadius: BorderRadius.circular(8),
                 ),
+                child: Center(
+                  child: Text(
+                    'Upload Image',
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ),
               ),
             ],
           ),

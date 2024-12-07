@@ -17,6 +17,44 @@ class MainScreen extends StatefulWidget {
 
 class _MainScreenState extends State<MainScreen> {
   Widget _selectedScreen = VendorsScreen();
+
+  screenSelector(item) {
+    switch (item.route) {
+      case BuyersScreen.id:
+        setState(() {
+          _selectedScreen = BuyersScreen();
+        });
+        break;
+      case VendorsScreen.id:
+        setState(() {
+          _selectedScreen = VendorsScreen();
+        });
+        break;
+      case OrdersScreen.id:
+        setState(() {
+          _selectedScreen = OrdersScreen();
+        });
+        break;
+      case CategoryScreen.id:
+        setState(() {
+          _selectedScreen = CategoryScreen();
+        });
+        break;
+      case UploadBannerScreen.id:
+        setState(() {
+          _selectedScreen = UploadBannerScreen();
+        });
+        break;
+      case ProductScreen.id:
+        setState(() {
+          _selectedScreen = ProductScreen();
+        });
+        break;
+
+      default:
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return AdminScaffold(
@@ -58,7 +96,10 @@ class _MainScreenState extends State<MainScreen> {
             icon: Icons.store,
           ),
         ],
-        selectedRoute: '',
+        selectedRoute: VendorsScreen.id,
+        onSelected: (item) {
+          screenSelector(item);
+        },
       ),
     );
   }

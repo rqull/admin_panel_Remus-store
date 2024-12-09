@@ -44,24 +44,30 @@ class _CategoryScreenState extends State<CategoryScreen> {
       final String randomId = const Uuid().v4();
       final String path = 'categories/$randomId$fileName';
 
-      // Cek apakah bucket exists
-      final buckets = await supabase.storage.listBuckets();
-      final categoriesBucket =
-          buckets.any((bucket) => bucket.id == 'categories');
+      // Debug: Print Supabase client status
+      print('Supabase client initialized: ${supabase != null}');
+      
+      // Debug: List all buckets
+      try {
+        final buckets = await supabase.storage.listBuckets();
+        print('Available buckets: ${buckets.map((b) => b.id).toList()}');
+      } catch (e) {
+        print('Error listing buckets: $e');
+      }
 
-      if (!categoriesBucket) {
-        print('Bucket categories tidak ditemukan');
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-              content: Text(
-                  'Storage bucket tidak ditemukan. Mohon periksa konfigurasi Supabase')),
-        );
-        return null;
+      // Try to create bucket if it doesn't exist
+      try {
+        await supabase.storage.createBucket('categories');
+        print('Bucket categories created successfully');
+      } catch (e) {
+        print('Create bucket error (might already exist): $e');
       }
 
       // Upload file
       try {
-        await supabase.storage.from('categories').uploadBinary(
+        final storageResponse = await supabase.storage
+            .from('categories')
+            .uploadBinary(
               path,
               _image,
               fileOptions: FileOptions(
@@ -69,20 +75,25 @@ class _CategoryScreenState extends State<CategoryScreen> {
                 upsert: true,
               ),
             );
+        
+        print('Upload success: $storageResponse');
+
+        // Get public URL
+        final String imageUrl = supabase.storage
+            .from('categories')
+            .getPublicUrl(path);
+            
+        print('Image URL: $imageUrl');
+        return imageUrl;
       } catch (uploadError) {
-        print('Error saat upload: $uploadError');
+        print('Error detail saat upload: $uploadError');
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text('Upload error: $uploadError')),
         );
         return null;
       }
-
-      // Get public URL
-      final String imageUrl =
-          supabase.storage.from('categories').getPublicUrl(path);
-      return imageUrl;
     } catch (e) {
-      print('Error uploading to Supabase: $e');
+      print('Error umum: $e');
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Supabase error: $e')),
       );

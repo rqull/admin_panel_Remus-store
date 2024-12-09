@@ -46,12 +46,15 @@ class _CategoryScreenState extends State<CategoryScreen> {
 
       // Cek apakah bucket exists
       final buckets = await supabase.storage.listBuckets();
-      final categoriesBucket = buckets.any((bucket) => bucket.id == 'categories');
-      
+      final categoriesBucket =
+          buckets.any((bucket) => bucket.id == 'categories');
+
       if (!categoriesBucket) {
         print('Bucket categories tidak ditemukan');
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Storage bucket tidak ditemukan. Mohon periksa konfigurasi Supabase')),
+          const SnackBar(
+              content: Text(
+                  'Storage bucket tidak ditemukan. Mohon periksa konfigurasi Supabase')),
         );
         return null;
       }
@@ -59,13 +62,13 @@ class _CategoryScreenState extends State<CategoryScreen> {
       // Upload file
       try {
         await supabase.storage.from('categories').uploadBinary(
-          path,
-          _image,
-          fileOptions: FileOptions(
-            contentType: 'image/png',
-            upsert: true,
-          ),
-        );
+              path,
+              _image,
+              fileOptions: FileOptions(
+                contentType: 'image/png',
+                upsert: true,
+              ),
+            );
       } catch (uploadError) {
         print('Error saat upload: $uploadError');
         ScaffoldMessenger.of(context).showSnackBar(
@@ -75,7 +78,8 @@ class _CategoryScreenState extends State<CategoryScreen> {
       }
 
       // Get public URL
-      final String imageUrl = supabase.storage.from('categories').getPublicUrl(path);
+      final String imageUrl =
+          supabase.storage.from('categories').getPublicUrl(path);
       return imageUrl;
     } catch (e) {
       print('Error uploading to Supabase: $e');

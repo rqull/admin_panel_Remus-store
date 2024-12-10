@@ -81,7 +81,7 @@ class _MainScreenState extends State<MainScreen> {
             icon: Icons.shopping_cart,
           ),
           AdminMenuItem(
-            title: 'Categoris',
+            title: 'Upload Categories',
             route: CategoryScreen.id,
             icon: Icons.category,
           ),

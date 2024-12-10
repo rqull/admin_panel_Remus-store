@@ -5,7 +5,7 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class UploadBannerScreen extends StatefulWidget {
-  static const String id = '\upload-banner-screen';
+  static const String id = '\banner-screen';
   const UploadBannerScreen({super.key});
 
   @override
@@ -54,19 +54,21 @@ class _UploadBannerScreenState extends State<UploadBannerScreen> {
 
       // Upload file
       try {
-        final storageResponse = await supabase.storage.from('banners').uploadBinary(
-              path,
-              _image,
-              fileOptions: FileOptions(
-                contentType: 'image/png',
-                upsert: true,
-              ),
-            );
+        final storageResponse =
+            await supabase.storage.from('banners').uploadBinary(
+                  path,
+                  _image,
+                  fileOptions: FileOptions(
+                    contentType: 'image/png',
+                    upsert: true,
+                  ),
+                );
 
         print('Upload success: $storageResponse');
 
         // Get public URL
-        final String imageUrl = supabase.storage.from('banners').getPublicUrl(path);
+        final String imageUrl =
+            supabase.storage.from('banners').getPublicUrl(path);
 
         print('Image URL: $imageUrl');
         return imageUrl;
@@ -129,7 +131,10 @@ class _UploadBannerScreenState extends State<UploadBannerScreen> {
   }
 
   Stream<QuerySnapshot> getBanners() {
-    return _firestore.collection('banners').orderBy('createdAt', descending: true).snapshots();
+    return _firestore
+        .collection('banners')
+        .orderBy('createdAt', descending: true)
+        .snapshots();
   }
 
   Future<void> _deleteBanner(String docId, String imageUrl) async {
@@ -201,7 +206,10 @@ class _UploadBannerScreenState extends State<UploadBannerScreen> {
                       const SizedBox(height: 20),
                       Container(
                         width: MediaQuery.of(context).size.width * 0.4,
-                        height: MediaQuery.of(context).size.width * 0.4 * 9/16, // 16:9 ratio
+                        height: MediaQuery.of(context).size.width *
+                            0.4 *
+                            9 /
+                            16, // 16:9 ratio
                         decoration: BoxDecoration(
                           color: Colors.grey.shade200,
                           border: Border.all(color: Colors.grey.shade300),
@@ -221,7 +229,8 @@ class _UploadBannerScreenState extends State<UploadBannerScreen> {
                         padding: const EdgeInsets.all(8.0),
                         child: ElevatedButton(
                           style: const ButtonStyle(
-                            backgroundColor: MaterialStatePropertyAll(Colors.blue),
+                            backgroundColor:
+                                MaterialStatePropertyAll(Colors.blue),
                           ),
                           onPressed: pickImage,
                           child: const Text(
@@ -275,7 +284,7 @@ class _UploadBannerScreenState extends State<UploadBannerScreen> {
                 physics: const NeverScrollableScrollPhysics(),
                 gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                   crossAxisCount: 2,
-                  childAspectRatio: 16/9,
+                  childAspectRatio: 16 / 9,
                   crossAxisSpacing: 10,
                   mainAxisSpacing: 10,
                 ),

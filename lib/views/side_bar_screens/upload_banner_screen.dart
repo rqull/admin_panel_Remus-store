@@ -14,9 +14,11 @@ class UploadBannerScreen extends StatefulWidget {
 
 class _UploadBannerScreenState extends State<UploadBannerScreen> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  final TextEditingController _searchController = TextEditingController();
   dynamic _image;
   String? fileName;
   bool _isLoading = false;
+  String _searchQuery = '';
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   final supabase = Supabase.instance.client;
 
@@ -49,26 +51,26 @@ class _UploadBannerScreenState extends State<UploadBannerScreen> {
         print('Error listing buckets: $e');
       }
 
-      final String randomId = const Uuid().v4();
-      final String path = 'banners/$randomId$fileName';
+      // Generate file name with timestamp
+      final String timestamp = DateTime.now().millisecondsSinceEpoch.toString();
+      final String newFileName = 'banner_$timestamp.png';
+      final String path = 'banners/$newFileName';
 
       // Upload file
       try {
-        final storageResponse =
-            await supabase.storage.from('banners').uploadBinary(
-                  path,
-                  _image,
-                  fileOptions: FileOptions(
-                    contentType: 'image/png',
-                    upsert: true,
-                  ),
-                );
+        final storageResponse = await supabase.storage.from('banners').uploadBinary(
+              path,
+              _image,
+              fileOptions: FileOptions(
+                contentType: 'image/png',
+                upsert: true,
+              ),
+            );
 
         print('Upload success: $storageResponse');
 
         // Get public URL
-        final String imageUrl =
-            supabase.storage.from('banners').getPublicUrl(path);
+        final String imageUrl = supabase.storage.from('banners').getPublicUrl(path);
 
         print('Image URL: $imageUrl');
         return imageUrl;
@@ -131,10 +133,20 @@ class _UploadBannerScreenState extends State<UploadBannerScreen> {
   }
 
   Stream<QuerySnapshot> getBanners() {
-    return _firestore
-        .collection('banners')
-        .orderBy('createdAt', descending: true)
-        .snapshots();
+    if (_searchQuery.isEmpty) {
+      return _firestore
+          .collection('banners')
+          .orderBy('createdAt', descending: true)
+          .snapshots();
+    } else {
+      // Search by file name in the URL
+      return _firestore
+          .collection('banners')
+          .orderBy('image')
+          .startAt([_searchQuery])
+          .endAt([_searchQuery + '\uf8ff'])
+          .snapshots();
+    }
   }
 
   Future<void> _deleteBanner(String docId, String imageUrl) async {
@@ -158,27 +170,80 @@ class _UploadBannerScreenState extends State<UploadBannerScreen> {
 
     if (confirm != true) return;
 
-    try {
-      // Delete from Firestore
-      await _firestore.collection('banners').doc(docId).delete();
+    setState(() {
+      _isLoading = true;
+    });
 
-      // Delete from Supabase storage
-      try {
-        final Uri uri = Uri.parse(imageUrl);
-        final String path = uri.pathSegments.last;
-        await supabase.storage.from('banners').remove([path]);
-        print('File deleted from Supabase: $path');
-      } catch (storageError) {
-        print('Error deleting from Supabase: $storageError');
+    try {
+      // Parse the URL and extract the file path
+      final Uri uri = Uri.parse(imageUrl);
+      print('Full URL being processed: $imageUrl');
+      print('URL Path segments: ${uri.pathSegments}');
+
+      // The file path should be everything after "banners/"
+      final int bannersIndex = uri.pathSegments.indexOf('banners');
+      if (bannersIndex == -1 || bannersIndex == uri.pathSegments.length - 1) {
+        throw Exception('Invalid file path structure');
       }
 
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Banner deleted successfully')),
-      );
+      // Get the file path after "banners/"
+      final String filePath = uri.pathSegments[bannersIndex + 1];
+      print('Attempting to delete file with path: $filePath');
+
+      // Try to delete from Supabase
+      try {
+        // List files in the bucket first to verify
+        final List<FileObject> files = await supabase.storage
+            .from('banners')
+            .list();
+        print('Files in bucket: ${files.map((f) => f.name).join(', ')}');
+
+        // Check if file exists
+        if (files.any((f) => f.name == filePath)) {
+          print('File found in bucket, proceeding with deletion');
+          await supabase.storage.from('banners').remove([filePath]);
+          print('File successfully deleted from Supabase');
+        } else {
+          print('File not found in bucket: $filePath');
+          throw Exception('File not found in storage bucket');
+        }
+      } catch (storageError) {
+        print('Supabase deletion error: $storageError');
+        setState(() {
+          _isLoading = false;
+        });
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Storage error: $storageError')),
+        );
+        return;
+      }
+
+      // If Supabase deletion was successful, delete from Firestore
+      try {
+        await _firestore.collection('banners').doc(docId).delete();
+        print('Firestore document deleted');
+        setState(() {
+          _isLoading = false;
+        });
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Banner deleted successfully')),
+        );
+      } catch (firestoreError) {
+        print('Firestore deletion error: $firestoreError');
+        setState(() {
+          _isLoading = false;
+        });
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Database error: $firestoreError')),
+        );
+      }
     } catch (e) {
-      print('Error deleting banner: $e');
+      print('General error: $e');
+      setState(() {
+        _isLoading = false;
+      });
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Error deleting banner: $e')),
+        SnackBar(content: Text('Error: $e')),
       );
     }
   }
@@ -253,15 +318,35 @@ class _UploadBannerScreenState extends State<UploadBannerScreen> {
             ),
           ),
           const Divider(thickness: 2),
-          Container(
-            alignment: Alignment.topLeft,
+          Padding(
             padding: const EdgeInsets.all(10),
-            child: const Text(
-              'Banners',
-              style: TextStyle(
-                fontSize: 24,
-                fontWeight: FontWeight.bold,
-              ),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                const Text(
+                  'Banners',
+                  style: TextStyle(
+                    fontSize: 24,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                SizedBox(
+                  width: 300,
+                  child: TextField(
+                    controller: _searchController,
+                    decoration: const InputDecoration(
+                      hintText: 'Search banners...',
+                      prefixIcon: Icon(Icons.search),
+                      border: OutlineInputBorder(),
+                    ),
+                    onChanged: (value) {
+                      setState(() {
+                        _searchQuery = value;
+                      });
+                    },
+                  ),
+                ),
+              ],
             ),
           ),
           StreamBuilder<QuerySnapshot>(
@@ -326,5 +411,11 @@ class _UploadBannerScreenState extends State<UploadBannerScreen> {
         ],
       ),
     );
+  }
+
+  @override
+  void dispose() {
+    _searchController.dispose();
+    super.dispose();
   }
 }

@@ -1,4 +1,3 @@
-import 'dart:math';
 import 'package:uuid/uuid.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
@@ -46,26 +45,29 @@ class _CategoryScreenState extends State<CategoryScreen> {
 
       // Generate file name with ID and category name
       final String timestamp = DateTime.now().millisecondsSinceEpoch.toString();
-      final String sanitizedName = _categoryNameController.text.replaceAll(RegExp(r'[^a-zA-Z0-9]'), '_');
+      final String sanitizedName =
+          _categoryNameController.text.replaceAll(RegExp(r'[^a-zA-Z0-9]'), '_');
       final String newFileName = '${timestamp}_$sanitizedName.png';
       // Include subfolder in the path
       final String path = 'categories/$newFileName';
 
       // Upload file
       try {
-        final storageResponse = await supabase.storage.from('categories').uploadBinary(
-              path,
-              _image,
-              fileOptions: FileOptions(
-                contentType: 'image/png',
-                upsert: true,
-              ),
-            );
+        final storageResponse =
+            await supabase.storage.from('categories').uploadBinary(
+                  path,
+                  _image,
+                  fileOptions: FileOptions(
+                    contentType: 'image/png',
+                    upsert: true,
+                  ),
+                );
 
         print('Upload success: $path');
 
         // Get public URL
-        final String imageUrl = supabase.storage.from('categories').getPublicUrl(path);
+        final String imageUrl =
+            supabase.storage.from('categories').getPublicUrl(path);
 
         print('Image URL: $imageUrl');
         return imageUrl;
@@ -154,9 +156,7 @@ class _CategoryScreenState extends State<CategoryScreen> {
       return _firestore
           .collection('categories')
           .orderBy('categoryName')
-          .startAt([_searchQuery])
-          .endAt([_searchQuery + '\uf8ff'])
-          .snapshots();
+          .startAt([_searchQuery]).endAt([_searchQuery + '\uf8ff']).snapshots();
     }
   }
 
@@ -202,14 +202,18 @@ class _CategoryScreenState extends State<CategoryScreen> {
         // List files in the bucket first to verify
         final List<FileObject> files = await supabase.storage
             .from('categories')
-            .list(path: 'categories');  // Add path parameter to list files in subfolder
+            .list(
+                path:
+                    'categories'); // Add path parameter to list files in subfolder
         print('Files in bucket/folder: ${files.map((f) => f.name).join(', ')}');
 
         // Check if file exists
         if (files.any((f) => f.name == fileName)) {
           print('File found in bucket, proceeding with deletion');
           // Include the subfolder in the path
-          await supabase.storage.from('categories').remove(['categories/$fileName']);
+          await supabase.storage
+              .from('categories')
+              .remove(['categories/$fileName']);
           print('File deletion command sent');
         } else {
           print('File not found in bucket: $fileName');
@@ -258,8 +262,9 @@ class _CategoryScreenState extends State<CategoryScreen> {
 
   // Fungsi untuk mengupdate nama kategori
   Future<void> _updateCategoryName(String docId, String currentName) async {
-    final TextEditingController nameController = TextEditingController(text: currentName);
-    
+    final TextEditingController nameController =
+        TextEditingController(text: currentName);
+
     String? newName = await showDialog<String>(
       context: context,
       builder: (context) => AlertDialog(
@@ -337,7 +342,8 @@ class _CategoryScreenState extends State<CategoryScreen> {
                                 width: 150,
                                 decoration: BoxDecoration(
                                   color: Colors.grey.shade500,
-                                  border: Border.all(color: Colors.grey.shade800),
+                                  border:
+                                      Border.all(color: Colors.grey.shade800),
                                   borderRadius: BorderRadius.circular(8),
                                 ),
                                 child: Center(
@@ -345,8 +351,8 @@ class _CategoryScreenState extends State<CategoryScreen> {
                                       ? Image.memory(_image)
                                       : const Text(
                                           'Upload Image',
-                                          style:
-                                              TextStyle(fontWeight: FontWeight.bold),
+                                          style: TextStyle(
+                                              fontWeight: FontWeight.bold),
                                         ),
                                 ),
                               ),
@@ -388,7 +394,8 @@ class _CategoryScreenState extends State<CategoryScreen> {
                               : TextButton(
                                   style: ButtonStyle(
                                     backgroundColor:
-                                        const WidgetStatePropertyAll(Colors.white),
+                                        const WidgetStatePropertyAll(
+                                            Colors.white),
                                     side: WidgetStatePropertyAll(
                                       BorderSide(color: Colors.blue.shade900),
                                     ),
@@ -503,7 +510,8 @@ class _CategoryScreenState extends State<CategoryScreen> {
                                   children: [
                                     // Tombol Edit
                                     IconButton(
-                                      icon: const Icon(Icons.edit, color: Colors.blue),
+                                      icon: const Icon(Icons.edit,
+                                          color: Colors.blue),
                                       onPressed: () => _updateCategoryName(
                                         doc.id,
                                         data['categoryName'],
@@ -511,7 +519,8 @@ class _CategoryScreenState extends State<CategoryScreen> {
                                     ),
                                     // Tombol Delete
                                     IconButton(
-                                      icon: const Icon(Icons.delete, color: Colors.red),
+                                      icon: const Icon(Icons.delete,
+                                          color: Colors.red),
                                       onPressed: () => _deleteCategory(
                                         doc.id,
                                         data['categoryImage'],

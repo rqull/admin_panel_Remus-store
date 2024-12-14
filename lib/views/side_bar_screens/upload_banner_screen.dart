@@ -58,19 +58,21 @@ class _UploadBannerScreenState extends State<UploadBannerScreen> {
 
       // Upload file
       try {
-        final storageResponse = await supabase.storage.from('banners').uploadBinary(
-              path,
-              _image,
-              fileOptions: FileOptions(
-                contentType: 'image/png',
-                upsert: true,
-              ),
-            );
+        final storageResponse =
+            await supabase.storage.from('banners').uploadBinary(
+                  path,
+                  _image,
+                  fileOptions: FileOptions(
+                    contentType: 'image/png',
+                    upsert: true,
+                  ),
+                );
 
         print('Upload success: $storageResponse');
 
         // Get public URL
-        final String imageUrl = supabase.storage.from('banners').getPublicUrl(path);
+        final String imageUrl =
+            supabase.storage.from('banners').getPublicUrl(path);
 
         print('Image URL: $imageUrl');
         return imageUrl;
@@ -143,9 +145,7 @@ class _UploadBannerScreenState extends State<UploadBannerScreen> {
       return _firestore
           .collection('banners')
           .orderBy('image')
-          .startAt([_searchQuery])
-          .endAt([_searchQuery + '\uf8ff'])
-          .snapshots();
+          .startAt([_searchQuery]).endAt([_searchQuery + '\uf8ff']).snapshots();
     }
   }
 
@@ -193,9 +193,8 @@ class _UploadBannerScreenState extends State<UploadBannerScreen> {
       // Try to delete from Supabase
       try {
         // List files in the bucket first to verify
-        final List<FileObject> files = await supabase.storage
-            .from('banners')
-            .list();
+        final List<FileObject> files =
+            await supabase.storage.from('banners').list();
         print('Files in bucket: ${files.map((f) => f.name).join(', ')}');
 
         // Check if file exists
@@ -295,7 +294,7 @@ class _UploadBannerScreenState extends State<UploadBannerScreen> {
                         child: ElevatedButton(
                           style: const ButtonStyle(
                             backgroundColor:
-                                MaterialStatePropertyAll(Colors.blue),
+                                WidgetStatePropertyAll(Colors.blue),
                           ),
                           onPressed: pickImage,
                           child: const Text(

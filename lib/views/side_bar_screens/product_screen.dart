@@ -1,8 +1,36 @@
 import 'package:flutter/material.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
-class ProductScreen extends StatelessWidget {
+class ProductScreen extends StatefulWidget {
   static const String id = '\product-screen';
   const ProductScreen({super.key});
+
+  @override
+  State<ProductScreen> createState() => _ProductScreenState();
+}
+
+class _ProductScreenState extends State<ProductScreen> {
+  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+  final List<String> _categories = [];
+
+  _getCategories() {
+    return _firestore.collection('categories').get().then(
+      (QuerySnapshot querySnapshot) {
+        for (var doc in querySnapshot.docs) {
+          setState(() {
+            _categories.add(doc['categoryName']);
+          });
+        }
+      },
+    );
+  }
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    _getCategories();
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -11,14 +39,14 @@ class ProductScreen extends StatelessWidget {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Text(
+          const Text(
             'Product Information',
             style: TextStyle(
               fontSize: 19,
               fontWeight: FontWeight.bold,
             ),
           ),
-          SizedBox(
+          const SizedBox(
             height: 20,
           ),
           TextFormField(
@@ -32,7 +60,7 @@ class ProductScreen extends StatelessWidget {
               ),
             ),
           ),
-          SizedBox(
+          const SizedBox(
             height: 20,
           ),
           Row(
@@ -50,7 +78,7 @@ class ProductScreen extends StatelessWidget {
                   ),
                 ),
               ),
-              SizedBox(
+              const SizedBox(
                 width: 20,
               ),
               Flexible(
@@ -68,7 +96,7 @@ class ProductScreen extends StatelessWidget {
               ),
             ],
           ),
-          SizedBox(
+          const SizedBox(
             height: 20,
           ),
           TextFormField(
@@ -82,7 +110,7 @@ class ProductScreen extends StatelessWidget {
               ),
             ),
           ),
-          SizedBox(
+          const SizedBox(
             height: 20,
           ),
           TextFormField(
@@ -96,7 +124,7 @@ class ProductScreen extends StatelessWidget {
               ),
             ),
           ),
-          SizedBox(
+          const SizedBox(
             height: 20,
           ),
           TextFormField(
@@ -110,7 +138,7 @@ class ProductScreen extends StatelessWidget {
               ),
             ),
           ),
-          SizedBox(
+          const SizedBox(
             height: 20,
           ),
           InkWell(
@@ -122,7 +150,7 @@ class ProductScreen extends StatelessWidget {
                   color: Colors.blue,
                   borderRadius: BorderRadius.circular(9),
                 ),
-                child: Center(
+                child: const Center(
                   child: Text(
                     'Upload Product',
                     style: TextStyle(

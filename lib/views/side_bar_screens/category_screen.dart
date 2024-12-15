@@ -1,3 +1,5 @@
+// ignore_for_file: avoid_print
+
 import 'package:uuid/uuid.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
@@ -57,7 +59,7 @@ class _CategoryScreenState extends State<CategoryScreen> {
             await supabase.storage.from('categories').uploadBinary(
                   path,
                   _image,
-                  fileOptions: FileOptions(
+                  fileOptions: const FileOptions(
                     contentType: 'image/png',
                     upsert: true,
                   ),

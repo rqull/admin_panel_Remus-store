@@ -11,14 +11,15 @@ class ProductScreen extends StatefulWidget {
 
 class _ProductScreenState extends State<ProductScreen> {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
-  final List<String> _categories = [];
+  final List<String> _categoriesList = [];
+  String? _selectedCategory;
 
   _getCategories() {
     return _firestore.collection('categories').get().then(
       (QuerySnapshot querySnapshot) {
         for (var doc in querySnapshot.docs) {
           setState(() {
-            _categories.add(doc['categoryName']);
+            _categoriesList.add(doc['categoryName']);
           });
         }
       },
@@ -82,17 +83,7 @@ class _ProductScreenState extends State<ProductScreen> {
                 width: 20,
               ),
               Flexible(
-                child: TextFormField(
-                  decoration: InputDecoration(
-                    labelText: 'Enter Category',
-                    filled: true,
-                    fillColor: Colors.grey.shade200,
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(10),
-                      borderSide: BorderSide.none,
-                    ),
-                  ),
-                ),
+                child: _buildDropDownField(),
               ),
             ],
           ),
@@ -162,6 +153,33 @@ class _ProductScreenState extends State<ProductScreen> {
           )
         ],
       ),
+    );
+  }
+
+  Widget _buildDropDownField() {
+    return DropdownButtonFormField(
+      decoration: InputDecoration(
+        labelText: 'Select Category',
+        filled: true,
+        fillColor: Colors.grey.shade200,
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(10),
+          borderSide: BorderSide.none,
+        ),
+      ),
+      items: _categoriesList.map((value) {
+        return DropdownMenuItem(
+          value: value,
+          child: Text(value),
+        );
+      }).toList(),
+      onChanged: (value) {
+        if (value != null) {
+          setState(() {
+            _selectedCategory = value;
+          });
+        }
+      },
     );
   }
 }

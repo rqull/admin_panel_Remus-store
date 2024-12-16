@@ -1,3 +1,6 @@
+import 'dart:typed_data';
+
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
@@ -13,6 +16,25 @@ class _ProductScreenState extends State<ProductScreen> {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   final List<String> _categoriesList = [];
   String? _selectedCategory;
+
+  List<Uint8List> images = <Uint8List>[];
+
+  chooseImage() async {
+    final pickedImages = await FilePicker.platform.pickFiles(
+      allowMultiple: true,
+      type: FileType.image,
+    );
+
+    if (pickedImages == null) {
+      print('No image');
+    } else {
+      for (var image in pickedImages.files) {
+        setState(() {
+          images.add(image.bytes!);
+        });
+      }
+    }
+  }
 
   _getCategories() {
     return _firestore.collection('categories').get().then(

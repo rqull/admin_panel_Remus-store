@@ -8,7 +8,7 @@ class ProductScreen extends StatefulWidget {
   static const String id = '\product-screen';
   const ProductScreen({super.key});
 
-  @override
+  // @override
   State<ProductScreen> createState() => _ProductScreenState();
 }
 
@@ -153,6 +153,18 @@ class _ProductScreenState extends State<ProductScreen> {
           ),
           const SizedBox(
             height: 20,
+          ),
+          GridView.builder(
+            itemCount: images.length + 1,
+            shrinkWrap: true,
+            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+              crossAxisCount: 3,
+              mainAxisSpacing: 8,
+              crossAxisSpacing: 8,
+            ),
+            itemBuilder: (context, index) {
+              return;
+            },
           ),
           InkWell(
             onTap: () {},

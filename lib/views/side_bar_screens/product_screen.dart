@@ -163,7 +163,18 @@ class _ProductScreenState extends State<ProductScreen> {
               crossAxisSpacing: 8,
             ),
             itemBuilder: (context, index) {
-              return;
+              return index == 0
+                  ? Center(
+                      child: IconButton(
+                        onPressed: () {
+                          chooseImage();
+                        },
+                        icon: Icon(
+                          Icons.add,
+                        ),
+                      ),
+                    )
+                  : Image.memory(images[index - 1]);
             },
           ),
           InkWell(

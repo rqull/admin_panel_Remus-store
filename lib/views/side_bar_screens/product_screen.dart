@@ -344,7 +344,8 @@ class _ProductScreenState extends State<ProductScreen> {
                                         child: Container(
                                           decoration: BoxDecoration(
                                             color: Colors.white,
-                                            borderRadius: BorderRadius.circular(20),
+                                            borderRadius:
+                                                BorderRadius.circular(20),
                                           ),
                                           child: IconButton(
                                             icon: const Icon(
@@ -508,7 +509,8 @@ class _ProductScreenState extends State<ProductScreen> {
                                 });
                               },
                               backgroundColor: Colors.blue.shade100,
-                              labelStyle: const TextStyle(color: Colors.black87),
+                              labelStyle:
+                                  const TextStyle(color: Colors.black87),
                             );
                           }).toList(),
                         ),
@@ -623,10 +625,8 @@ class _ProductScreenState extends State<ProductScreen> {
                           final name =
                               data['productName']?.toString().toLowerCase() ??
                                   '';
-                          final category = data['category']
-                                  ?.toString()
-                                  .toLowerCase() ??
-                              '';
+                          final category =
+                              data['category']?.toString().toLowerCase() ?? '';
                           final searchLower = _searchQuery.toLowerCase();
                           return name.contains(searchLower) ||
                               category.contains(searchLower);
@@ -651,8 +651,7 @@ class _ProductScreenState extends State<ProductScreen> {
                           itemCount: products.length,
                           itemBuilder: (context, index) {
                             final doc = products[index];
-                            final data =
-                                doc.data() as Map<String, dynamic>;
+                            final data = doc.data() as Map<String, dynamic>;
 
                             return Card(
                               elevation: 3,
@@ -660,14 +659,14 @@ class _ProductScreenState extends State<ProductScreen> {
                                 borderRadius: BorderRadius.circular(10),
                               ),
                               child: Column(
-                                crossAxisAlignment:
-                                    CrossAxisAlignment.start,
+                                crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Expanded(
                                     child: Stack(
                                       children: [
                                         ClipRRect(
-                                          borderRadius: const BorderRadius.vertical(
+                                          borderRadius:
+                                              const BorderRadius.vertical(
                                             top: Radius.circular(10),
                                           ),
                                           child: PageView.builder(
@@ -675,8 +674,7 @@ class _ProductScreenState extends State<ProductScreen> {
                                                         as List<dynamic>?)
                                                     ?.length ??
                                                 0,
-                                            itemBuilder:
-                                                (context, imageIndex) {
+                                            itemBuilder: (context, imageIndex) {
                                               final imageUrls =
                                                   data['imageUrls']
                                                       as List<dynamic>?;
@@ -689,11 +687,11 @@ class _ProductScreenState extends State<ProductScreen> {
                                                             .toString(),
                                                         fit: BoxFit.cover,
                                                         errorBuilder: (context,
-                                                            error,
-                                                            stackTrace) {
+                                                            error, stackTrace) {
                                                           return const Center(
                                                             child: Icon(
-                                                              Icons.error_outline,
+                                                              Icons
+                                                                  .error_outline,
                                                               color: Colors.red,
                                                               size: 40,
                                                             ),
@@ -702,7 +700,8 @@ class _ProductScreenState extends State<ProductScreen> {
                                                       )
                                                     : const Center(
                                                         child: Icon(
-                                                          Icons.image_not_supported,
+                                                          Icons
+                                                              .image_not_supported,
                                                           color: Colors.grey,
                                                           size: 40,
                                                         ),
@@ -717,7 +716,8 @@ class _ProductScreenState extends State<ProductScreen> {
                                           child: Container(
                                             decoration: BoxDecoration(
                                               color: Colors.white,
-                                              borderRadius: BorderRadius.circular(20),
+                                              borderRadius:
+                                                  BorderRadius.circular(20),
                                             ),
                                             child: IconButton(
                                               icon: const Icon(

@@ -19,8 +19,14 @@ class _ProductScreenState extends State<ProductScreen> {
 
   final List<String> _categoriesList = [];
 
+// we  will be uploading the value in this variable to firestore
   List<String> _sizesList = [];
   String? _selectedCategory;
+  late String _productName;
+  late num _productPrice;
+  late String _productDesc;
+  late num _productDiscount;
+  late num _productQuantity;
 
   bool _isEntered = false;
 
@@ -81,6 +87,7 @@ class _ProductScreenState extends State<ProductScreen> {
                 ),
               ),
               TextFormField(
+                onChanged: (value) => _productName = value,
                 validator: (value) {
                   if (value == null || value.isEmpty) {
                     return 'Please enter product name';
@@ -103,6 +110,7 @@ class _ProductScreenState extends State<ProductScreen> {
                 children: [
                   Flexible(
                     child: TextFormField(
+                      onChanged: (value) => _productPrice = num.parse(value),
                       validator: (value) {
                         if (value == null || value.isEmpty) {
                           return 'Please enter product price';
@@ -127,6 +135,7 @@ class _ProductScreenState extends State<ProductScreen> {
                 ],
               ),
               TextFormField(
+                onChanged: (value) => _productDiscount = num.parse(value),
                 validator: (value) {
                   if (value == null || value.isEmpty) {
                     return 'Please enter discount';
@@ -145,6 +154,28 @@ class _ProductScreenState extends State<ProductScreen> {
                 ),
               ),
               TextFormField(
+                onChanged: (value) => _productQuantity = int.parse(value),
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return 'Please enter quantity';
+                  } else {
+                    return null;
+                  }
+                },
+                decoration: InputDecoration(
+                  labelText: 'Quantity',
+                  filled: true,
+                  fillColor: Colors.grey.shade200,
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(10),
+                    borderSide: BorderSide.none,
+                  ),
+                ),
+              ),
+              TextFormField(
+                maxLength: 800,
+                maxLines: 4,
+                onChanged: (value) => _productDesc = value,
                 validator: (value) {
                   if (value == null || value.isEmpty) {
                     return 'Please enter description';

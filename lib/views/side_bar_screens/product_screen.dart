@@ -277,13 +277,15 @@ class _ProductScreenState extends State<ProductScreen> {
                 padding: const EdgeInsets.all(20),
                 decoration: BoxDecoration(
                   color: Colors.white,
-                  borderRadius: BorderRadius.circular(10),
+                  borderRadius: BorderRadius.all(
+                    Radius.circular(10),
+                  ),
                   boxShadow: [
                     BoxShadow(
                       color: Colors.grey.withOpacity(0.1),
                       spreadRadius: 5,
                       blurRadius: 7,
-                      offset: const Offset(0, 3),
+                      offset: Offset(0, 3),
                     ),
                   ],
                 ),
@@ -303,18 +305,18 @@ class _ProductScreenState extends State<ProductScreen> {
                       width: double.infinity,
                       height: 200,
                       decoration: BoxDecoration(
-                        border: Border.all(color: Colors.grey.shade300),
-                        borderRadius: BorderRadius.circular(10),
+                        border: Border.all(color: Colors.grey),
+                        borderRadius: BorderRadius.all(Radius.circular(10)),
                       ),
                       child: _images.isEmpty
                           ? Center(
                               child: Column(
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
-                                  Icon(
+                                  const Icon(
                                     Icons.cloud_upload_outlined,
                                     size: 50,
-                                    color: Colors.grey.shade400,
+                                    color: Colors.grey,
                                   ),
                                   const SizedBox(height: 10),
                                   const Text('No images selected'),
@@ -330,7 +332,8 @@ class _ProductScreenState extends State<ProductScreen> {
                                   child: Stack(
                                     children: [
                                       ClipRRect(
-                                        borderRadius: BorderRadius.circular(8),
+                                        borderRadius: const BorderRadius.all(
+                                            Radius.circular(8)),
                                         child: Image.memory(
                                           _images[index],
                                           width: 180,
@@ -342,10 +345,10 @@ class _ProductScreenState extends State<ProductScreen> {
                                         right: 5,
                                         top: 5,
                                         child: Container(
-                                          decoration: BoxDecoration(
+                                          decoration: const BoxDecoration(
                                             color: Colors.white,
-                                            borderRadius:
-                                                BorderRadius.circular(20),
+                                            borderRadius: BorderRadius.all(
+                                                Radius.circular(20)),
                                           ),
                                           child: IconButton(
                                             icon: const Icon(
@@ -383,27 +386,27 @@ class _ProductScreenState extends State<ProductScreen> {
                     // Product Form
                     TextFormField(
                       controller: _productNameController,
-                      decoration: InputDecoration(
+                      decoration: const InputDecoration(
                         labelText: 'Product Name',
                         hintText: 'Enter product name',
                         border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(8),
+                          borderRadius: BorderRadius.all(Radius.circular(8)),
                         ),
                         filled: true,
-                        fillColor: Colors.grey.shade50,
+                        fillColor: Colors.grey,
                       ),
                     ),
                     const SizedBox(height: 15),
                     TextFormField(
                       controller: _productPriceController,
-                      decoration: InputDecoration(
+                      decoration: const InputDecoration(
                         labelText: 'Price',
                         hintText: 'Enter product price',
                         border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(8),
+                          borderRadius: BorderRadius.all(Radius.circular(8)),
                         ),
                         filled: true,
-                        fillColor: Colors.grey.shade50,
+                        fillColor: Colors.grey,
                         prefixText: 'Rp ',
                       ),
                       keyboardType: TextInputType.number,
@@ -411,42 +414,42 @@ class _ProductScreenState extends State<ProductScreen> {
                     const SizedBox(height: 15),
                     TextFormField(
                       controller: _discountController,
-                      decoration: InputDecoration(
+                      decoration: const InputDecoration(
                         labelText: 'Discount (%)',
                         hintText: 'Enter discount percentage',
                         border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(8),
+                          borderRadius: BorderRadius.all(Radius.circular(8)),
                         ),
                         filled: true,
-                        fillColor: Colors.grey.shade50,
+                        fillColor: Colors.grey,
                       ),
                       keyboardType: TextInputType.number,
                     ),
                     const SizedBox(height: 15),
                     TextFormField(
                       controller: _quantityController,
-                      decoration: InputDecoration(
+                      decoration: const InputDecoration(
                         labelText: 'Quantity',
                         hintText: 'Enter product quantity',
                         border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(8),
+                          borderRadius: BorderRadius.all(Radius.circular(8)),
                         ),
                         filled: true,
-                        fillColor: Colors.grey.shade50,
+                        fillColor: Colors.grey,
                       ),
                       keyboardType: TextInputType.number,
                     ),
                     const SizedBox(height: 15),
                     TextFormField(
                       controller: _productDescriptionController,
-                      decoration: InputDecoration(
+                      decoration: const InputDecoration(
                         labelText: 'Description',
                         hintText: 'Enter product description',
                         border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(8),
+                          borderRadius: BorderRadius.all(Radius.circular(8)),
                         ),
                         filled: true,
-                        fillColor: Colors.grey.shade50,
+                        fillColor: Colors.grey,
                       ),
                       maxLines: 3,
                     ),
@@ -457,14 +460,15 @@ class _ProductScreenState extends State<ProductScreen> {
                         Expanded(
                           child: TextFormField(
                             controller: _sizeController,
-                            decoration: InputDecoration(
+                            decoration: const InputDecoration(
                               labelText: 'Size',
                               hintText: 'Enter product size',
                               border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(8),
+                                borderRadius:
+                                    BorderRadius.all(Radius.circular(8)),
                               ),
                               filled: true,
-                              fillColor: Colors.grey.shade50,
+                              fillColor: Colors.grey,
                             ),
                             onChanged: (value) {
                               setState(() {
@@ -502,7 +506,7 @@ class _ProductScreenState extends State<ProductScreen> {
                           children: _sizesList.map((size) {
                             return Chip(
                               label: Text(size),
-                              deleteIcon: const Icon(Icons.close, size: 18),
+                              deleteIcon: const Icon(Icons.close),
                               onDeleted: () {
                                 setState(() {
                                   _sizesList.remove(size);
@@ -520,13 +524,13 @@ class _ProductScreenState extends State<ProductScreen> {
                     DropdownButtonFormField<String>(
                       value: selectedCategory,
                       hint: const Text('Select Category'),
-                      decoration: InputDecoration(
+                      decoration: const InputDecoration(
                         labelText: 'Category',
                         border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(8),
+                          borderRadius: BorderRadius.all(Radius.circular(8)),
                         ),
                         filled: true,
-                        fillColor: Colors.grey.shade50,
+                        fillColor: Colors.grey,
                       ),
                       items: categories.map((String category) {
                         return DropdownMenuItem(
@@ -565,13 +569,13 @@ class _ProductScreenState extends State<ProductScreen> {
                 padding: const EdgeInsets.all(20),
                 decoration: BoxDecoration(
                   color: Colors.white,
-                  borderRadius: BorderRadius.circular(10),
+                  borderRadius: BorderRadius.all(Radius.circular(10)),
                   boxShadow: [
                     BoxShadow(
                       color: Colors.grey.withOpacity(0.1),
                       spreadRadius: 5,
                       blurRadius: 7,
-                      offset: const Offset(0, 3),
+                      offset: Offset(0, 3),
                     ),
                   ],
                 ),
@@ -588,14 +592,14 @@ class _ProductScreenState extends State<ProductScreen> {
                     const SizedBox(height: 20),
                     TextFormField(
                       controller: _searchController,
-                      decoration: InputDecoration(
+                      decoration: const InputDecoration(
                         hintText: 'Search products...',
-                        prefixIcon: const Icon(Icons.search),
+                        prefixIcon: Icon(Icons.search),
                         border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(8),
+                          borderRadius: BorderRadius.all(Radius.circular(8)),
                         ),
                         filled: true,
-                        fillColor: Colors.grey.shade50,
+                        fillColor: Colors.grey,
                       ),
                       onChanged: (value) {
                         setState(() {
@@ -678,35 +682,32 @@ class _ProductScreenState extends State<ProductScreen> {
                                               final imageUrls =
                                                   data['imageUrls']
                                                       as List<dynamic>?;
-                                              return Container(
-                                                width: double.infinity,
-                                                child: imageUrls != null &&
-                                                        imageUrls.isNotEmpty
-                                                    ? Image.network(
-                                                        imageUrls[imageIndex]
-                                                            .toString(),
-                                                        fit: BoxFit.cover,
-                                                        errorBuilder: (context,
-                                                            error, stackTrace) {
-                                                          return const Center(
-                                                            child: Icon(
-                                                              Icons
-                                                                  .error_outline,
-                                                              color: Colors.red,
-                                                              size: 40,
-                                                            ),
-                                                          );
-                                                        },
-                                                      )
-                                                    : const Center(
-                                                        child: Icon(
-                                                          Icons
-                                                              .image_not_supported,
-                                                          color: Colors.grey,
-                                                          size: 40,
-                                                        ),
+                                              return imageUrls != null &&
+                                                      imageIndex <
+                                                          imageUrls.length
+                                                  ? Image.network(
+                                                      imageUrls[imageIndex]
+                                                          .toString(),
+                                                      fit: BoxFit.cover,
+                                                      errorBuilder: (context,
+                                                          error, stackTrace) {
+                                                        return const Center(
+                                                          child: Icon(
+                                                            Icons.error_outline,
+                                                            color: Colors.red,
+                                                            size: 40,
+                                                          ),
+                                                        );
+                                                      },
+                                                    )
+                                                  : const Center(
+                                                      child: Icon(
+                                                        Icons
+                                                            .image_not_supported,
+                                                        color: Colors.grey,
+                                                        size: 40,
                                                       ),
-                                              );
+                                                    );
                                             },
                                           ),
                                         ),
@@ -714,10 +715,10 @@ class _ProductScreenState extends State<ProductScreen> {
                                           right: 5,
                                           top: 5,
                                           child: Container(
-                                            decoration: BoxDecoration(
+                                            decoration: const BoxDecoration(
                                               color: Colors.white,
-                                              borderRadius:
-                                                  BorderRadius.circular(20),
+                                              borderRadius: BorderRadius.all(
+                                                  Radius.circular(20)),
                                             ),
                                             child: IconButton(
                                               icon: const Icon(
@@ -768,8 +769,8 @@ class _ProductScreenState extends State<ProductScreen> {
                                         Text(
                                           data['category']?.toString() ??
                                               'No category',
-                                          style: TextStyle(
-                                            color: Colors.grey[600],
+                                          style: const TextStyle(
+                                            color: Colors.grey,
                                             fontSize: 12,
                                           ),
                                         ),

@@ -75,7 +75,7 @@ class _MainScreenState extends State<MainScreen> {
           height: 50,
           width: double.infinity,
           decoration: BoxDecoration(
-            color: Colors.black,
+            color: Colors.blue.shade300,
           ),
           child: Center(
             child: Text(
@@ -91,7 +91,7 @@ class _MainScreenState extends State<MainScreen> {
         footer: Container(
           height: 50,
           width: double.infinity,
-          color: Colors.black,
+          color: Colors.blue.shade300,
           child: Center(
             child: Text(
               'Footer',

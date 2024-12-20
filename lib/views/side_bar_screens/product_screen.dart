@@ -165,7 +165,7 @@ class _ProductScreenState extends State<ProductScreen> {
 
       await _firestore.collection('products').add({
         'productName': _productNameController.text,
-        'price': double.parse(_productPriceController.text),
+        'productPrice': double.parse(_productPriceController.text),
         'description': _productDescriptionController.text,
         'category': selectedCategory,
         'imageUrls': imageUrls,
@@ -407,7 +407,7 @@ class _ProductScreenState extends State<ProductScreen> {
                         ),
                         filled: true,
                         fillColor: Colors.grey,
-                        prefixText: 'Rp ',
+                        prefixText: '\$ ',
                       ),
                       keyboardType: TextInputType.number,
                     ),
@@ -415,7 +415,7 @@ class _ProductScreenState extends State<ProductScreen> {
                     TextFormField(
                       controller: _discountController,
                       decoration: const InputDecoration(
-                        labelText: 'Discount (%)',
+                        labelText: 'Discount',
                         hintText: 'Enter discount percentage',
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.all(Radius.circular(8)),
@@ -759,7 +759,7 @@ class _ProductScreenState extends State<ProductScreen> {
                                         ),
                                         const SizedBox(height: 4),
                                         Text(
-                                          'Rp ${data['price']?.toString() ?? '0'}',
+                                          '\$ ${data['productPrice']?.toString() ?? '0'}',
                                           style: const TextStyle(
                                             color: Colors.blue,
                                             fontWeight: FontWeight.bold,

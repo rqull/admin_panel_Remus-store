@@ -105,7 +105,7 @@ class _ProductScreenState extends State<ProductScreen> {
     try {
       if (_images.isEmpty) return [];
 
-      List<String> productImage = [];
+      List<String> productImages = [];
       final String timestamp = DateTime.now().millisecondsSinceEpoch.toString();
       final String sanitizedName =
           _productNameController.text.replaceAll(RegExp(r'[^a-zA-Z0-9]'), '_');
@@ -128,12 +128,12 @@ class _ProductScreenState extends State<ProductScreen> {
           final String productUrl =
               _productSupabase.storage.from('products').getPublicUrl(path);
           print('Image URL: $productUrl');
-          productImage.add(productUrl);
+          productImages.add(productUrl);
         } catch (uploadError) {
           print('Error uploading to Supabase: $uploadError');
         }
       }
-      return productImage;
+      return productImages;
     } catch (e) {
       print('Error in _uploadProductImagesToSupabase: $e');
       return [];
@@ -161,14 +161,14 @@ class _ProductScreenState extends State<ProductScreen> {
     EasyLoading.show(status: 'Uploading Product...');
 
     try {
-      final List<String> productImage = await _uploadProductImagesToSupabase();
+      final List<String> productImages = await _uploadProductImagesToSupabase();
 
       await _firestore.collection('products').add({
         'productName': _productNameController.text,
         'productPrice': double.parse(_productPriceController.text),
         'description': _productDescriptionController.text,
         'category': selectedCategory,
-        'productImage': productImage,
+        'productImages': productImages,
         'sizes': _sizesList,
         'discount': int.parse(_discountController.text),
         'quantity': int.parse(_quantityController.text),
@@ -201,7 +201,7 @@ class _ProductScreenState extends State<ProductScreen> {
   }
 
   // Delete product
-  Future<void> _deleteProduct(String docId, List<String> productImage) async {
+  Future<void> _deleteProduct(String docId, List<String> productImages) async {
     bool? confirm = await showDialog<bool>(
       context: context,
       builder: (context) => AlertDialog(
@@ -227,7 +227,7 @@ class _ProductScreenState extends State<ProductScreen> {
 
     try {
       // Delete all images from Supabase
-      for (String imageUrl in productImage) {
+      for (String imageUrl in productImages) {
         final Uri uri = Uri.parse(imageUrl);
         final List<String> segments = uri.pathSegments;
         final String fileName = segments.last;
@@ -416,7 +416,7 @@ class _ProductScreenState extends State<ProductScreen> {
                       controller: _discountController,
                       decoration: const InputDecoration(
                         labelText: 'Discount',
-                        hintText: 'Enter discount percentage',
+                        hintText: 'Enter discount \$',
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.all(Radius.circular(8)),
                         ),
@@ -674,13 +674,13 @@ class _ProductScreenState extends State<ProductScreen> {
                                             top: Radius.circular(10),
                                           ),
                                           child: PageView.builder(
-                                            itemCount: (data['productImage']
-                                                    as List<dynamic>?)
+                                            itemCount: (data['productImages']
+                                                        as List<dynamic>?)
                                                     ?.length ??
                                                 0,
                                             itemBuilder: (context, imageIndex) {
                                               final productImages =
-                                                  data['productImage']
+                                                  data['productImages']
                                                       as List<dynamic>?;
                                               return productImages != null &&
                                                       imageIndex <
@@ -728,12 +728,12 @@ class _ProductScreenState extends State<ProductScreen> {
                                               ),
                                               onPressed: () => _deleteProduct(
                                                 doc.id,
-                                                (data['productImage']
-                                                        as List<dynamic>?)
-                                                    ?.map((url) =>
-                                                        url.toString())
-                                                    .toList() ??
-                                                [],
+                                                (data['productImages']
+                                                            as List<dynamic>?)
+                                                        ?.map((url) =>
+                                                            url.toString())
+                                                        .toList() ??
+                                                    [],
                                               ),
                                             ),
                                           ),

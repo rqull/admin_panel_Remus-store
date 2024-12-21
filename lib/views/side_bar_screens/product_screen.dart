@@ -105,7 +105,7 @@ class _ProductScreenState extends State<ProductScreen> {
     try {
       if (_images.isEmpty) return [];
 
-      List<String> imageUrls = [];
+      List<String> productImage = [];
       final String timestamp = DateTime.now().millisecondsSinceEpoch.toString();
       final String sanitizedName =
           _productNameController.text.replaceAll(RegExp(r'[^a-zA-Z0-9]'), '_');
@@ -125,15 +125,15 @@ class _ProductScreenState extends State<ProductScreen> {
               );
 
           print('Upload success: $path');
-          final String imageUrl =
+          final String productUrl =
               _productSupabase.storage.from('products').getPublicUrl(path);
-          print('Image URL: $imageUrl');
-          imageUrls.add(imageUrl);
+          print('Image URL: $productUrl');
+          productImage.add(productUrl);
         } catch (uploadError) {
           print('Error uploading to Supabase: $uploadError');
         }
       }
-      return imageUrls;
+      return productImage;
     } catch (e) {
       print('Error in _uploadProductImagesToSupabase: $e');
       return [];
@@ -161,14 +161,14 @@ class _ProductScreenState extends State<ProductScreen> {
     EasyLoading.show(status: 'Uploading Product...');
 
     try {
-      final List<String> imageUrls = await _uploadProductImagesToSupabase();
+      final List<String> productImage = await _uploadProductImagesToSupabase();
 
       await _firestore.collection('products').add({
         'productName': _productNameController.text,
         'productPrice': double.parse(_productPriceController.text),
         'description': _productDescriptionController.text,
         'category': selectedCategory,
-        'imageUrls': imageUrls,
+        'productImage': productImage,
         'sizes': _sizesList,
         'discount': int.parse(_discountController.text),
         'quantity': int.parse(_quantityController.text),
@@ -201,7 +201,7 @@ class _ProductScreenState extends State<ProductScreen> {
   }
 
   // Delete product
-  Future<void> _deleteProduct(String docId, List<String> imageUrls) async {
+  Future<void> _deleteProduct(String docId, List<String> productImage) async {
     bool? confirm = await showDialog<bool>(
       context: context,
       builder: (context) => AlertDialog(
@@ -227,7 +227,7 @@ class _ProductScreenState extends State<ProductScreen> {
 
     try {
       // Delete all images from Supabase
-      for (String imageUrl in imageUrls) {
+      for (String imageUrl in productImage) {
         final Uri uri = Uri.parse(imageUrl);
         final List<String> segments = uri.pathSegments;
         final String fileName = segments.last;
@@ -674,19 +674,19 @@ class _ProductScreenState extends State<ProductScreen> {
                                             top: Radius.circular(10),
                                           ),
                                           child: PageView.builder(
-                                            itemCount: (data['imageUrls']
-                                                        as List<dynamic>?)
+                                            itemCount: (data['productImage']
+                                                    as List<dynamic>?)
                                                     ?.length ??
                                                 0,
                                             itemBuilder: (context, imageIndex) {
-                                              final imageUrls =
-                                                  data['imageUrls']
+                                              final productImages =
+                                                  data['productImage']
                                                       as List<dynamic>?;
-                                              return imageUrls != null &&
+                                              return productImages != null &&
                                                       imageIndex <
-                                                          imageUrls.length
+                                                          productImages.length
                                                   ? Image.network(
-                                                      imageUrls[imageIndex]
+                                                      productImages[imageIndex]
                                                           .toString(),
                                                       fit: BoxFit.cover,
                                                       errorBuilder: (context,
@@ -728,12 +728,12 @@ class _ProductScreenState extends State<ProductScreen> {
                                               ),
                                               onPressed: () => _deleteProduct(
                                                 doc.id,
-                                                (data['imageUrls']
-                                                            as List<dynamic>?)
-                                                        ?.map((url) =>
-                                                            url.toString())
-                                                        .toList() ??
-                                                    [],
+                                                (data['productImage']
+                                                        as List<dynamic>?)
+                                                    ?.map((url) =>
+                                                        url.toString())
+                                                    .toList() ??
+                                                [],
                                               ),
                                             ),
                                           ),

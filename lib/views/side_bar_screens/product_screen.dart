@@ -163,7 +163,8 @@ class _ProductScreenState extends State<ProductScreen> {
     try {
       final List<String> productImages = await _uploadProductImagesToSupabase();
 
-      await _firestore.collection('products').add({
+      // Membuat dokumen baru dan mendapatkan referensinya
+      final docRef = await _firestore.collection('products').add({
         'productName': _productNameController.text,
         'productPrice': double.parse(_productPriceController.text),
         'description': _productDescriptionController.text,
@@ -173,6 +174,11 @@ class _ProductScreenState extends State<ProductScreen> {
         'discount': int.parse(_discountController.text),
         'quantity': int.parse(_quantityController.text),
         'uploadDate': DateTime.now(),
+      });
+
+      // Update dokumen untuk menambahkan productId
+      await docRef.update({
+        'productId': docRef.id,
       });
 
       setState(() {
@@ -416,12 +422,13 @@ class _ProductScreenState extends State<ProductScreen> {
                       controller: _discountController,
                       decoration: const InputDecoration(
                         labelText: 'Discount',
-                        hintText: 'Enter discount \$',
+                        hintText: 'Enter discount',
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.all(Radius.circular(8)),
                         ),
                         filled: true,
                         fillColor: Colors.grey,
+                        prefixText: '\$ ',
                       ),
                       keyboardType: TextInputType.number,
                     ),

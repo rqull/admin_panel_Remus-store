@@ -16,7 +16,7 @@ class MainScreen extends StatefulWidget {
 }
 
 class _MainScreenState extends State<MainScreen> {
-  Widget _selectedScreen = VendorsScreen();
+  Widget _selectedScreen = OrdersScreen();
 
   screenSelector(item) {
     switch (item.route) {

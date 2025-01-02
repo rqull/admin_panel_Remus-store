@@ -1,4 +1,5 @@
 import 'dart:typed_data';
+import 'package:app_web/.env/product_key.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
@@ -27,12 +28,12 @@ class _ProductScreenState extends State<ProductScreen> {
   final TextEditingController _discountController = TextEditingController();
   final TextEditingController _quantityController = TextEditingController();
 
-  List<Uint8List> _images = [];
+  final List<Uint8List> _images = [];
   String? selectedCategory;
   bool _isLoading = false;
   String _searchQuery = '';
   List<String> categories = [];
-  List<String> _sizesList = [];
+  final List<String> _sizesList = [];
   bool _isEntered = false;
 
   @override
@@ -43,10 +44,7 @@ class _ProductScreenState extends State<ProductScreen> {
   }
 
   void _initSupabase() {
-    _productSupabase = SupabaseClient(
-      'https://jiukiuyzjggwnmzkrhey.supabase.co',
-      'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImppdWtpdXl6amdnd25temtyaGV5Iiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTczMzY0ODkwNiwiZXhwIjoyMDQ5MjI0OTA2fQ.LC73ZsEhO805P-mCGSv2Xnq5l5OAE4UOsmNs1NhMYZY',
-    );
+    _productSupabase = SupabaseClient(ProductKey.url, ProductKey.productKey);
   }
 
   @override
@@ -173,6 +171,8 @@ class _ProductScreenState extends State<ProductScreen> {
         'sizes': _sizesList,
         'discount': int.parse(_discountController.text),
         'quantity': int.parse(_quantityController.text),
+        'rating': 0,
+        'totalReviews': 0,
         'uploadDate': DateTime.now(),
       });
 

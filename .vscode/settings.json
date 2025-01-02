@@ -12,5 +12,6 @@
         "editor.suggestSelection": "first",
         "editor.tabCompletion": "onlySnippets",
         "editor.wordBasedSuggestions": "off"
-    }
+    },
+    "cmake.ignoreCMakeListsMissing": true
 }

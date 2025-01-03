@@ -173,7 +173,9 @@ class _ProductScreenState extends State<ProductScreen> {
         'quantity': int.parse(_quantityController.text),
         'rating': 0,
         'totalReviews': 0,
+        'vendorId': '',
         'uploadDate': DateTime.now(),
+        'isVendorProduct': false,
       });
 
       // Update dokumen untuk menambahkan productId

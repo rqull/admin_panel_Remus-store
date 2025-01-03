@@ -1,10 +1,11 @@
 import 'package:app_web/views/side_bar_screens/buyers_screen.dart';
 import 'package:app_web/views/side_bar_screens/category_screen.dart';
+import 'package:app_web/views/side_bar_screens/dashboard_screen.dart';
 import 'package:app_web/views/side_bar_screens/orders_screen.dart';
 import 'package:app_web/views/side_bar_screens/product_screen.dart';
 import 'package:app_web/views/side_bar_screens/upload_banner_screen.dart';
 import 'package:app_web/views/side_bar_screens/vendors_screen.dart';
-import 'package:flutter/cupertino.dart';
+import 'package:app_web/views/side_bar_screens/withdrawal_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_admin_scaffold/admin_scaffold.dart';
 
@@ -16,100 +17,77 @@ class MainScreen extends StatefulWidget {
 }
 
 class _MainScreenState extends State<MainScreen> {
-  Widget _selectedScreen = OrdersScreen();
+  Widget _selectedItem = DashboardScreen();
 
-  screenSelector(item) {
+  screenSlector(item) {
     switch (item.route) {
-      case BuyersScreen.id:
+      case DashboardScreen.id:
         setState(() {
-          _selectedScreen = BuyersScreen();
+          _selectedItem = DashboardScreen();
         });
         break;
       case VendorsScreen.id:
         setState(() {
-          _selectedScreen = VendorsScreen();
+          _selectedItem = VendorsScreen();
+        });
+        break;
+      case BuyersScreen.id:
+        setState(() {
+          _selectedItem = BuyersScreen();
         });
         break;
       case OrdersScreen.id:
         setState(() {
-          _selectedScreen = OrdersScreen();
+          _selectedItem = OrdersScreen();
         });
         break;
       case CategoryScreen.id:
         setState(() {
-          _selectedScreen = CategoryScreen();
-        });
-        break;
-      case UploadBannerScreen.id:
-        setState(() {
-          _selectedScreen = UploadBannerScreen();
+          _selectedItem = CategoryScreen();
         });
         break;
       case ProductScreen.id:
         setState(() {
-          _selectedScreen = ProductScreen();
+          _selectedItem = ProductScreen();
         });
         break;
-
-      default:
+      case UploadBannerScreen.id:
+        setState(() {
+          _selectedItem = UploadBannerScreen();
+        });
+        break;
+      case WithdrawalScreen.id:
+        setState(() {
+          _selectedItem = WithdrawalScreen();
+        });
+        break;
     }
   }
 
   @override
   Widget build(BuildContext context) {
     return AdminScaffold(
+      backgroundColor: Colors.white,
       appBar: AppBar(
-        backgroundColor: Colors.blue,
-        title: Text(
-          'Managment',
-          style: TextStyle(
-            color: Colors.white,
-            fontWeight: FontWeight.bold,
-            fontSize: 24,
-          ),
-        ),
+        backgroundColor: Colors.indigo,
+        title: const Text('Management'),
       ),
-      body: _selectedScreen,
       sideBar: SideBar(
-        header: Container(
-          height: 50,
-          width: double.infinity,
-          decoration: BoxDecoration(
-            color: Colors.blue.shade300,
+        items: const [
+          AdminMenuItem(
+            title: 'Dashboard',
+            route: DashboardScreen.id,
+            icon: Icons.dashboard,
           ),
-          child: Center(
-            child: Text(
-              'Mult Vendor Admin',
-              style: TextStyle(
-                color: Colors.white,
-                fontWeight: FontWeight.bold,
-                letterSpacing: 1.7,
-              ),
-            ),
-          ),
-        ),
-        footer: Container(
-          height: 50,
-          width: double.infinity,
-          color: Colors.blue.shade300,
-          child: Center(
-            child: Text(
-              'Footer',
-              style:
-                  TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
-            ),
-          ),
-        ),
-        items: [
           AdminMenuItem(
             title: 'Vendors',
             route: VendorsScreen.id,
-            icon: CupertinoIcons.person_3,
+            icon: Icons.store,
           ),
           AdminMenuItem(
             title: 'Buyers',
             route: BuyersScreen.id,
-            icon: CupertinoIcons.person,
+            icon: Icons.person,
           ),
           AdminMenuItem(
             title: 'Orders',
@@ -117,26 +95,58 @@ class _MainScreenState extends State<MainScreen> {
             icon: Icons.shopping_cart,
           ),
           AdminMenuItem(
-            title: 'Upload Categories',
+            title: 'Categories',
             route: CategoryScreen.id,
             icon: Icons.category,
           ),
           AdminMenuItem(
-            title: 'Upload Banners',
-            route: UploadBannerScreen.id,
-            icon: Icons.upload,
+            title: 'Products',
+            route: ProductScreen.id,
+            icon: Icons.shop,
           ),
           AdminMenuItem(
-            title: 'Upload Products',
-            route: ProductScreen.id,
-            icon: Icons.store,
+            title: 'Upload Banners',
+            route: UploadBannerScreen.id,
+            icon: Icons.add_photo_alternate_outlined,
+          ),
+          AdminMenuItem(
+            title: 'Withdrawal',
+            route: WithdrawalScreen.id,
+            icon: Icons.money,
           ),
         ],
-        selectedRoute: VendorsScreen.id,
+        selectedRoute: DashboardScreen.id,
         onSelected: (item) {
-          screenSelector(item);
+          screenSlector(item);
         },
+        header: Container(
+          height: 50,
+          width: double.infinity,
+          color: const Color(0xff444444),
+          child: const Center(
+            child: Text(
+              'Admin Panel',
+              style: TextStyle(
+                color: Colors.white,
+              ),
+            ),
+          ),
+        ),
+        footer: Container(
+          height: 50,
+          width: double.infinity,
+          color: const Color(0xff444444),
+          child: const Center(
+            child: Text(
+              'footer',
+              style: TextStyle(
+                color: Colors.white,
+              ),
+            ),
+          ),
+        ),
       ),
+      body: _selectedItem,
     );
   }
 }

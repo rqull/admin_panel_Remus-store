@@ -1,44 +1,74 @@
-# Flutter Admin Panel
+# E-Commerce Admin Panel
 
-Sebuah admin panel yang dibangun dengan Flutter Web untuk mengelola kategori dan banner. Proyek ini menggunakan Supabase untuk penyimpanan file dan Firebase Firestore untuk manajemen data.
+A comprehensive admin panel built with Flutter Web for managing an e-commerce platform. This application provides complete control over products, orders, vendors, and financial transactions.
 
-## Fitur Utama
+## Core Features
 
-### Manajemen Kategori
-- Upload gambar kategori ke Supabase Storage
-- Penyimpanan metadata kategori di Firestore
-- Tampilan daftar kategori real-time
-- Fungsi pencarian kategori
-- Hapus kategori (termasuk gambar dari storage)
-- Penamaan file unik menggunakan timestamp
+### 1. Order Management
+- Real-time order tracking and updates
+- Order status management (Processing, Delivered, Cancelled)
+- Detailed order information including buyer details
+- Order history and analytics
 
-### Manajemen Banner
-- Upload gambar banner ke Supabase Storage
-- Penyimpanan metadata banner di Firestore
-- Tampilan daftar banner real-time
-- Fungsi pencarian banner
-- Hapus banner (termasuk gambar dari storage)
-- Dukungan aspek rasio 16:9
+### 2. Vendor Management
+- Complete vendor profile management
+- Vendor approval system
+- Store performance monitoring
+- Vendor earnings tracking
 
-## Teknologi yang Digunakan
+### 3. Withdrawal System
+- Process vendor withdrawal requests
+- Withdrawal status tracking (Pending, Approved, Rejected)
+- Bank account information management
+- Transaction history
 
-- Flutter Web
-- Supabase Storage untuk penyimpanan file
-- Firebase Firestore untuk database
-- File Picker untuk pemilihan file
-- UUID untuk generasi ID unik
+### 4. Product Management
+- Product catalog management
+- Category organization
+- Product approval system
+- Stock management
 
-## Struktur Penyimpanan
+### 5. Financial Management
+- Transaction tracking
+- Revenue analytics
+- Payment processing
+- Withdrawal management
 
-### Supabase Storage
-- Bucket `categories`: Menyimpan gambar kategori
-  - Path: `categories/[timestamp]_[nama_kategori].png`
-- Bucket `banners`: Menyimpan gambar banner
-  - Path: `banners/banner_[timestamp].png`
+## Technology Stack
 
-### Firebase Firestore
-- Collection `categories`: Metadata kategori
-- Collection `banners`: Metadata banner
+- Flutter Web for frontend
+- Firebase Authentication for user management
+- Cloud Firestore for database
+- Firebase Storage for file storage
+- Google Fonts for typography
+- Intl package for formatting
+
+## Database Structure
+
+### Firebase Collections
+- `orders`: Order information and status
+- `vendors`: Vendor profiles and store details
+- `products`: Product catalog
+- `withdrawal`: Withdrawal requests
+- `categories`: Product categories
+- `buyers`: Customer information
+
+## Security Features
+
+- Secure authentication system
+- Role-based access control
+- Transaction validation
+- Data integrity checks
+- Error handling and validation
+
+## User Interface
+
+- Clean and intuitive dashboard
+- Responsive design
+- Real-time updates
+- Interactive data tables
+- Status indicators
+- Action confirmations
 
 ## Dependencies
 
@@ -46,63 +76,47 @@ Sebuah admin panel yang dibangun dengan Flutter Web untuk mengelola kategori dan
 dependencies:
   flutter:
     sdk: flutter
-  supabase_flutter: ^2.8.1
-  file_picker: ^6.1.1
-  uuid: ^4.2.2
-  firebase_core: ^3.8.1
-  cloud_firestore: ^5.5.1
+  firebase_core: ^latest
+  cloud_firestore: ^latest
+  firebase_auth: ^latest
+  google_fonts: ^latest
+  intl: ^latest
 ```
 
-## Konfigurasi
+## Key Functionalities
 
-1. Supabase
-   - Buat bucket `categories` dan `banners`
-   - Aktifkan public access untuk bucket
-   - Konfigurasi RLS (Row Level Security)
+### Order Processing
+- View order details
+- Update order status
+- Track delivery status
+- Manage cancellations
 
-2. Firebase
-   - Setup Firebase project
-   - Tambahkan Firebase config ke `web/index.html`
-   - Enable Firestore
+### Vendor Operations
+- Review vendor applications
+- Monitor vendor performance
+- Process withdrawal requests
+- Track vendor earnings
 
-## Fitur Keamanan
+### Financial Operations
+- Process withdrawals
+- Track transactions
+- Monitor revenue
+- Handle refunds
 
-- Validasi file sebelum upload
-- Sanitasi nama file
-- Penanganan error komprehensif
-- Konfirmasi sebelum penghapusan
-- Feedback user melalui SnackBar
+## Best Practices Implemented
 
-## Error Handling
+- Comprehensive error handling
+- Real-time data synchronization
+- Secure transaction processing
+- User-friendly interface
+- Efficient data management
+- Responsive design principles
 
-- Validasi input
-- Pengecekan eksistensi file
-- Penanganan error storage
-- Penanganan error database
-- Feedback visual untuk user
+## Future Enhancements
 
-## Best Practices
-
-- Penamaan file unik untuk mencegah konflik
-- Pemisahan logika storage dan database
-- Loading state untuk operasi async
-- Feedback user yang informatif
-- Konfirmasi untuk operasi destruktif
-
-## Pengembangan Selanjutnya
-
-- [ ] Implementasi edit kategori/banner
-- [ ] Kompresi gambar
-- [ ] Paginasi untuk daftar
-- [ ] Filter dan sort lanjutan
-- [ ] Manajemen permission
-- [ ] Optimasi performa
-- [ ] Unit testing
-
-## Kontribusi
-
-Silakan berkontribusi dengan membuat pull request atau melaporkan issues.
-
-## Lisensi
-
-MIT License - lihat file LICENSE untuk detail lengkap.
+- [ ] Advanced analytics dashboard
+- [ ] Automated reporting system
+- [ ] Multi-language support
+- [ ] Enhanced search capabilities
+- [ ] Bulk operations management
+- [ ] Export functionality

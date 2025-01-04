@@ -94,7 +94,36 @@ class WithdrawalScreen extends StatelessWidget {
                           document.data()! as Map<String, dynamic>;
                       return DataRow(
                         cells: [
-                          DataCell(Text(data['vendorName'] ?? '')),
+                          DataCell(
+                            FutureBuilder<DocumentSnapshot>(
+                              future: FirebaseFirestore.instance
+                                  .collection('vendors')
+                                  .doc(data['vendorId'])
+                                  .get(),
+                              builder: (BuildContext context,
+                                  AsyncSnapshot<DocumentSnapshot> snapshot) {
+                                if (snapshot.hasError) {
+                                  return Text('Error');
+                                }
+
+                                if (snapshot.connectionState ==
+                                    ConnectionState.waiting) {
+                                  return Text('Loading...');
+                                }
+
+                                if (snapshot.hasData && snapshot.data!.exists) {
+                                  Map<String, dynamic> vendorData =
+                                      snapshot.data!.data()
+                                          as Map<String, dynamic>;
+                                  return Text(vendorData['storeName'] ??
+                                      vendorData['fullName'] ??
+                                      'Unknown');
+                                }
+
+                                return Text('Unknown');
+                              },
+                            ),
+                          ),
                           DataCell(Text(
                             NumberFormat.currency(
                               locale: 'en_US',
